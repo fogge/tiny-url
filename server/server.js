@@ -3,16 +3,15 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
 const cors = require("cors");
-
 // Models
-const User = require("./models/user");
+const Link = require("./models/link");
 
 const API_PORT = 4000;
 const app = express();
 const router = express.Router();
 
 // this is our MongoDB database
-const dbRoute = "mongodb://localhost:27017/MERN-setup";
+const dbRoute = "mongodb://localhost:27017/tiny-url";
 
 // connects our back end code with the database
 mongoose.connect(dbRoute, { useNewUrlParser: true });
@@ -26,7 +25,7 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 // (optional) only made for logging and
 // bodyParser, parses the request body to be a readable json format
-app.use(cors())
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(logger("dev"));
@@ -35,24 +34,28 @@ router.get("/hello", (req, res) => {
   res.json({ message: "User created" });
 });
 
-router.get("/getUser", (req, res) => {
-  User.find((err, data) => {
-    if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true, data: data });
-  });
-});
-
-router.post("/createUser", (req, res) => {
-  console.log(req);
-  const { email } = req.body;
-
-  new User({
-    email
+router.post("/createLink", (req, res) => {
+  const { webUrl, tinyUrl, session } = req.body;
+  new Link({
+    webUrl,
+    tinyUrl,
+    session
   })
     .save()
-    .then(user => {
+    .then(link => {
       res.json({ success: true, message: "User created" });
     });
+});
+
+router.get("/getLinks", (req, res) => {
+  Link.find({})
+    .sort({'date': -1})
+    .limit(10)
+    .catch(err => console.log(err))
+    .then(links => {
+      res.json(links);   
+    });
+
 });
 
 app.use("/api", router);
