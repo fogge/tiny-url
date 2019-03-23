@@ -1,17 +1,22 @@
-const mongoose = require("mongoose");
 const express = require("express");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
 const cors = require("cors");
-// Models
-const Link = require("./models/link");
 
+// Session and DB
+const mongoose = require("mongoose");
+const session = require("express-session");
+const MongoStore = require("connect-mongo")(session);
+const cookieParser = require("cookie-parser");
+
+// Routes
+const api = require("./routes/api");
+
+// App config
 const API_PORT = 4000;
+const DATABASE_NAME = "tiny-url";
+const dbRoute = `mongodb://localhost:27017/${DATABASE_NAME}`;
 const app = express();
-const router = express.Router();
-
-// this is our MongoDB database
-const dbRoute = "mongodb://localhost:27017/tiny-url";
 
 // connects our back end code with the database
 mongoose.connect(dbRoute, { useNewUrlParser: true });
@@ -23,6 +28,19 @@ db.once("open", () => console.log("connected to the database"));
 // checks if connection with the database is successful
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
+app.use(cookieParser());
+app.use(
+  session({
+    secret: "alittle1337",
+    resave: false,
+    saveUninitialized: true,
+    store: new MongoStore({ mongooseConnection: db }),
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7 * 2
+    }
+  })
+);
+
 // (optional) only made for logging and
 // bodyParser, parses the request body to be a readable json format
 app.use(cors());
@@ -30,47 +48,22 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(logger("dev"));
 
-router.get("/hello", (req, res) => {
-  res.json({ message: "User created" });
-});
+app.use("/api", api.router);
 
-router.post("/createLink", (req, res) => {
-  const { webUrl, tinyUrl, session } = req.body;
-  new Link({
-    webUrl,
-    tinyUrl,
-    session
-  })
-    .save()
-    .then(link => {
-      res.json({ success: true, message: "User created" });
-    });
-});
+app.use("/", express.static("../client/build"));
 
-router.get("/getLinks", (req, res) => {
-  Link.find({})
-    .sort({'date': -1})
-    .limit(10)
-    .catch(err => console.log(err))
-    .then(links => {
-      res.json(links);   
-    });
-});
-
-router.get('/*', (req, res) => {
+app.get("/*", (req, res) => {
   let tinyUrl = req.url.substring(1);
-  Link.findOne({tinyUrl})
-  .catch(err => console.log(err))
-  .then(link => {
-    if(link === null) {
-      // Redirect to an error saying "This url doesnt exist yet! Create it!"
-      res.redirect('/');
-    } else {
-      res.redirect(link.webUrl)
-    }
-  });
-})
-
-app.use("/api", router);
+  api
+    .findAndRedirect(tinyUrl)
+    .catch(err => console.log(err))
+    .then(link => {
+      if (link === null) {
+        res.redirect(`/#/${tinyUrl}`);
+      } else {
+        res.redirect(link.webUrl);
+      }
+    });
+});
 
 app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));

@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Route,
-  Switch
+  Switch,
+  Redirect
 } from "react-router-dom";
 
 import Footer from "./Components/Footer/Footer";
@@ -12,18 +13,19 @@ import "./styles/base.scss";
 
 class App extends Component {
   render() {
-    console.log("hello");
     return (
       <Router>
         <Switch>
-          <Route path='/' exact component={Header}>
+          <Route path='/' exact >
             <Header />
             <Main />
             <Footer />
           </Route>
-          <Route component={() => window.location = `api${window.location.pathname}`} />
+          <Route path='/test' exact component={Header} />
+          <Route>
+            <Redirect to='/' />
+          </Route>
         </Switch>
-
       </Router>
     );
   }
