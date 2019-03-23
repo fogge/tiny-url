@@ -55,12 +55,20 @@ router.get("/getLinks", (req, res) => {
     .then(links => {
       res.json(links);   
     });
-
 });
 
-router.get('/test', (req, res) => {
-  console.log('hello');
-  res.redirect('https://facebook.com/menvadvetjag');
+router.get('/*', (req, res) => {
+  let tinyUrl = req.url.substring(1);
+  Link.findOne({tinyUrl})
+  .catch(err => console.log(err))
+  .then(link => {
+    if(link === null) {
+      // Redirect to an error saying "This url doesnt exist yet! Create it!"
+      res.redirect('/');
+    } else {
+      res.redirect(link.webUrl)
+    }
+  });
 })
 
 app.use("/api", router);
