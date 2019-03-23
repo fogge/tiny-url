@@ -1,7 +1,36 @@
-.input-success {
-  border: 1px solid green;
+@import '../../styles/colors.scss';
+
+main {
+  width: 80%;
+  margin: auto;
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px $bg-dark;
+  background: $bg-light;
+
+
+  h3 {
+    margin: 0 0 15px 0;
+  }
+
+  .input-success {
+    border: 1px solid green;
+  }
+  
+  .input-error {
+    border: 1px solid red;
+  }
+
+  button {
+    padding: 10px;
+    background: $bg-dark;
+    border: 0;
+    border-radius: 5px;
+    cursor: pointer;
+    &:hover {
+      opacity: 0.9;
+    }
+  }
 }
 
-.input-error {
-  border: 1px solid red;
-}

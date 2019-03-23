@@ -62,16 +62,21 @@ export default class Main extends Component {
   render() {
     this.randomizeString();
     return (
-      <div className='hello'>
-        <input
-          className={this.state.isTrueUrl ? "input-success" : "input-error"}
-          value={this.state.url}
-          type="url"
-          name="homepage"
-          onChange={e => this.onChangeHandler(e)}
-        />
-        <button onClick={this.submit}>submit</button>
-      </div>
+      <main>
+        <div className='main-content'>
+          <h3>Make a tiny url here!</h3>
+          <input
+            className={this.state.isTrueUrl ? "input-success" : "input-error"}
+            value={this.state.url}
+            type="url"
+            name="homepage"
+            onChange={e => this.onChangeHandler(e)}
+          />
+          <button onClick={this.submit}>Create my url!</button>
+        </div>
+
+      </main>
+
     );
   }
 }
