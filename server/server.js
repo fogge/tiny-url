@@ -58,6 +58,11 @@ router.get("/getLinks", (req, res) => {
 
 });
 
+router.get('/test', (req, res) => {
+  console.log('hello');
+  res.redirect('https://facebook.com/menvadvetjag');
+})
+
 app.use("/api", router);
 
 app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));

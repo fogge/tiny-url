@@ -1,20 +1,30 @@
 import React, { Component } from "react";
-import Footer from './Components/Footer/Footer';
-import Main from './Components/Main/Main';
-import Header from './Components/Header/Header';
-import './styles/base.scss';
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch
+} from "react-router-dom";
 
+import Footer from "./Components/Footer/Footer";
+import Main from "./Components/Main/Main";
+import Header from "./Components/Header/Header";
+import "./styles/base.scss";
 
 class App extends Component {
-
-
   render() {
+    console.log("hello");
     return (
-      <div className='App'>
-        <Header />
-        <Main />
-        <Footer />
-      </div>
+      <Router>
+        <Switch>
+          <Route path='/' exact component={Header}>
+            <Header />
+            <Main />
+            <Footer />
+          </Route>
+          <Route component={() => window.location = `api${window.location.pathname}`} />
+        </Switch>
+
+      </Router>
     );
   }
 }
