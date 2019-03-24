@@ -105,10 +105,8 @@ export default class Main extends Component {
       <React.Fragment>
         <header>
           <div className='header-overlay'>
-            <h3>Make a tiny url here!</h3>
-
+            <h1>A link-shortener for everyone</h1>
             <div className='url-maker-container'>
-
               <input
                 className={
                   this.state.isTrueUrl ? "input-success" : "input-error"
@@ -125,20 +123,25 @@ export default class Main extends Component {
         </header>
 
         <main>
-          <div>
-            <ul>
+          <h2>Your 10 last created links</h2>
+
+          <div className='link-list-holder'>
+            <ol>
+              <li>
+              <h4>Tiny Link:</h4>
+              <h4>Target:</h4>
+              </li>
               {this.state.lastTenLinks.map(link => {
                 return (
                   <li key={link.tinyUrl}>
-                    Tiny:
-                    <a href={this.createFullLink(link.tinyUrl)}>
+                    <a target='_blank' href={this.createFullLink(link.tinyUrl)}>
                       {this.createFullLink(link.tinyUrl)}
                     </a>
-                    - Target: <a href={link.webUrl}>{link.webUrl}</a>
+                    <a className="web-link" href={link.webUrl}>{link.webUrl}</a>
                   </li>
                 );
               })}
-            </ul>
+            </ol>
           </div>
         </main>
       </React.Fragment>

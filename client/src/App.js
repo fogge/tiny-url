@@ -6,7 +6,6 @@ import {
   Redirect
 } from "react-router-dom";
 
-import Footer from "./Components/Footer/Footer";
 import Main from "./Components/Main/Main";
 import "./styles/base.scss";
 
@@ -17,7 +16,6 @@ class App extends Component {
         <Switch>
           <Route path='/' exact >
             <Main />
-            <Footer />
           </Route>
           <Route>
             <Redirect to='/' />

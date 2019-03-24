@@ -10,3 +10,11 @@ html {
   line-height: 1.16667;
   min-height: 100%;
 }
+
+a {
+  color: initial;
+  text-decoration: none;
+  &:hover {
+    color: $bg-dark;
+  }
+}
