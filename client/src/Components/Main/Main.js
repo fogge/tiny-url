@@ -49,26 +49,38 @@ export default class Main extends Component {
       });
   };
 
+  addHttpToLink = url => {
+    if (!/^(f|ht)tps?:\/\//i.test(url)) {
+      url = "http://" + url;
+    }
+    return url;
+  };
+
   submit = () => {
-    let data = {
-      webUrl: this.state.url,
-      tinyUrl: this.randomizeString()
-    };
-    fetch("api/createLink", {
-      method: "POST",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
-    })
-      .then(res => res.json())
-      .then(() => {
-        this.getLastTenLinks();
+    if (this.state.isTrueUrl) {
+      let webUrl = this.addHttpToLink(this.state.url);
+      let data = {
+        webUrl,
+        tinyUrl: this.randomizeString()
+      };
+      fetch("api/createLink", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
       })
-      .catch(err => {
-        console.log(err);
-      });
+        .then(res => res.json())
+        .then(() => {
+          this.getLastTenLinks();
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    } else {
+      // Error here
+    }
   };
 
   validateUrl = str => {
@@ -90,18 +102,29 @@ export default class Main extends Component {
 
   render() {
     return (
-      <main>
-        <div className='main-content'>
-          <h3>Make a tiny url here!</h3>
-          <input
-            className={this.state.isTrueUrl ? "input-success" : "input-error"}
-            value={this.state.url}
-            type='url'
-            name='homepage'
-            onChange={e => this.onChangeHandler(e)}
-          />
-          <button onClick={this.submit}>Create my url!</button>
+      <React.Fragment>
+        <header>
+          <div className='header-overlay'>
+            <h3>Make a tiny url here!</h3>
 
+            <div className='url-maker-container'>
+
+              <input
+                className={
+                  this.state.isTrueUrl ? "input-success" : "input-error"
+                }
+                value={this.state.url}
+                type='url'
+                name='homepage'
+                onChange={e => this.onChangeHandler(e)}
+                placeholder="Paste a link and I'll shorten it for you"
+              />
+              <button onClick={this.submit}>Shorten link</button>
+            </div>{" "}
+          </div>
+        </header>
+
+        <main>
           <div>
             <ul>
               {this.state.lastTenLinks.map(link => {
@@ -117,8 +140,8 @@ export default class Main extends Component {
               })}
             </ul>
           </div>
-        </div>
-      </main>
+        </main>
+      </React.Fragment>
     );
   }
 }

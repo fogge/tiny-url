@@ -8,7 +8,6 @@ import {
 
 import Footer from "./Components/Footer/Footer";
 import Main from "./Components/Main/Main";
-import Header from "./Components/Header/Header";
 import "./styles/base.scss";
 
 class App extends Component {
@@ -17,11 +16,9 @@ class App extends Component {
       <Router>
         <Switch>
           <Route path='/' exact >
-            <Header />
             <Main />
             <Footer />
           </Route>
-          <Route path='/test' exact component={Header} />
           <Route>
             <Redirect to='/' />
           </Route>

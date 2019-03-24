@@ -1,36 +1,90 @@
-@import '../../styles/colors.scss';
+@import "../../styles/colors.scss";
 
 main {
   width: 80%;
   margin: auto;
-  margin-top: 20px;
+  margin-top: 400px;
   padding: 20px;
   border-radius: 5px;
-  box-shadow: 0 0 5px $bg-dark;
-  background: $bg-light;
-
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   h3 {
     margin: 0 0 15px 0;
   }
+}
 
-  .input-success {
-    border: 1px solid green;
-  }
-  
-  .input-error {
-    border: 1px solid red;
-  }
+header {
+  background: url("../../gfx/header.jpeg");
+  background-size: cover;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 400px;
+  z-index: -1;
 
-  button {
-    padding: 10px;
-    background: $bg-dark;
-    border: 0;
-    border-radius: 5px;
-    cursor: pointer;
-    &:hover {
-      opacity: 0.9;
+  // box-shadow: 0 5px 5px -5px $bg-dark;
+  .header-overlay {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      rgba(129, 166, 149, 0.8),
+      rgba(129, 166, 149, 0.3)
+    );
+
+    h3 {
+      margin-top: 200px;
+    }
+    .url-maker-container {
+      display: flex;
+      width: 40%;
+    }
+    input {
+      box-sizing: border-box;
+      height: 55px;
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+      flex-grow: 1;
+      border: none;
+      font-size: 0.9em;
+      font-weight: 500;
+      color: $bg-dark;
+      padding-left: 20px;
+      &:focus {
+        box-shadow: 0 0 10px rgba(0, 98, 139, 0.5);
+        padding-left: 18px;
+        border: 2px solid $bg-dark;
+        border-right: none;
+        outline: none;
+      }
+      &::placeholder {
+        color: $text-light;
+        opacity: 1;
+      }
+    }
+
+    button {
+      width: 130px;
+      padding: 10px;
+      background: $bg-dark;
+      border: 0;
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+      color: #fff;
+      text-transform: uppercase;
+      font-size: 0.8em;
+      font-weight: 500;
+      cursor: pointer;
+      &:hover {
+        background: $bg-dark-secondary;
+      }
+      &:focus {
+        outline: none;
+      }
     }
   }
 }
-
