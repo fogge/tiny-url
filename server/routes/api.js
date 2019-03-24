@@ -8,7 +8,8 @@ router.post("/createLink", (req, res) => {
   new Link({
     webUrl,
     tinyUrl,
-    session
+    session: req.session.id,
+    date: new Date()
   })
     .save()
     .then(link => {

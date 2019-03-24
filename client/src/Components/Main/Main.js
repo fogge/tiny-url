@@ -4,15 +4,20 @@ import "./Main.scss";
 export default class Main extends Component {
   state = {
     url: "",
-    isTrueUrl: false
+    isTrueUrl: false,
+    lastTenLinks: []
   };
+
+  componentDidMount() {
+    this.getLastTenLinks();
+  }
 
   onChangeHandler = e => {
     let url = e.currentTarget.value;
-    if (this.validateUrl(url)){
-      this.setState({url, isTrueUrl: true})
+    if (this.validateUrl(url)) {
+      this.setState({ url, isTrueUrl: true });
     } else {
-      this.setState({url, isTrueUrl: false})
+      this.setState({ url, isTrueUrl: false });
     }
   };
 
@@ -26,11 +31,28 @@ export default class Main extends Component {
     return text;
   };
 
+  getLastTenLinks = () => {
+    fetch("api/getLinks", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => res.json())
+      .then(links => {
+        this.setState({
+          lastTenLinks: links
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
   submit = () => {
     let data = {
       webUrl: this.state.url,
-      tinyUrl: this.randomizeString(),
-      session: "Not set"
+      tinyUrl: this.randomizeString()
     };
     fetch("api/createLink", {
       method: "POST",
@@ -41,6 +63,9 @@ export default class Main extends Component {
       body: JSON.stringify(data)
     })
       .then(res => res.json())
+      .then(() => {
+        this.getLastTenLinks();
+      })
       .catch(err => {
         console.log(err);
       });
@@ -59,8 +84,11 @@ export default class Main extends Component {
     return !!pattern.test(str);
   };
 
+  createFullLink = tinyUrl => {
+    return `${window.location.origin}/${tinyUrl}`;
+  };
+
   render() {
-    this.randomizeString();
     return (
       <main>
         <div className='main-content'>
@@ -68,16 +96,29 @@ export default class Main extends Component {
           <input
             className={this.state.isTrueUrl ? "input-success" : "input-error"}
             value={this.state.url}
-            type="url"
-            name="homepage"
+            type='url'
+            name='homepage'
             onChange={e => this.onChangeHandler(e)}
           />
           <button onClick={this.submit}>Create my url!</button>
 
+          <div>
+            <ul>
+              {this.state.lastTenLinks.map(link => {
+                return (
+                  <li key={link.tinyUrl}>
+                    Tiny:
+                    <a href={this.createFullLink(link.tinyUrl)}>
+                      {this.createFullLink(link.tinyUrl)}
+                    </a>
+                    - Target: <a href={link.webUrl}>{link.webUrl}</a>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         </div>
-
       </main>
-
     );
   }
 }

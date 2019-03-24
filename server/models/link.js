@@ -13,6 +13,7 @@ const linkSchema = new Schema({
     type: String,
     required: true
   },
+  date: Date
 
 });
 
