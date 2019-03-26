@@ -129,7 +129,6 @@ export default class Main extends Component {
             <ol>
               <li>
               <h4>Tiny Link:</h4>
-              <h4>Target:</h4>
               </li>
               {this.state.lastTenLinks.map(link => {
                 return (
@@ -137,7 +136,8 @@ export default class Main extends Component {
                     <a target='_blank' href={this.createFullLink(link.tinyUrl)}>
                       {this.createFullLink(link.tinyUrl)}
                     </a>
-                    <a className="web-link" href={link.webUrl}>{link.webUrl}</a>
+                    {/* Should be hidden in the first instance, an arrow should be able to show the targeted link under */}
+                    {/* <a className="web-link" href={link.webUrl}>{link.webUrl}</a> */}
                   </li>
                 );
               })}
