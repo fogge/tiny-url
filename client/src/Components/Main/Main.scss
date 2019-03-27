@@ -39,10 +39,13 @@ main {
       li {
         border-radius: 5px;
         display: flex;
+        padding: 5px 0;
+        justify-content: space-between;
+        .link-holder {
+        }
         a {
           display: flex;
-          flex: 1;
-          padding: 5px;
+          justify-content: center;
           color: $bg-dark;
           &:hover {
             color: $text-hover;
@@ -55,7 +58,30 @@ main {
           flex: 1;
         }
         .web-link {
-          padding-left: 0px;
+          overflow: hidden;
+          transition: max-height 400ms ease-in-out;
+          height: auto;
+          max-height: 150px;
+          padding: 0 20px;
+          word-break: break-all;
+        }
+        .web-link.collapsed {
+          max-height: 0;
+        }
+        .arrow-left {
+          transition: transform 400ms ease-in-out;
+        }
+
+        .arrow-down {
+          transition: transform 400ms ease-in-out;
+          transform: rotate(90deg);
+        }
+
+        .svg-holder {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
         }
       }
     }
@@ -141,15 +167,37 @@ header {
         }
       }
     }
+    p {
+      justify-content: center;
+      display: flex;
+      color: $error;
+      font-size: 0.8em;
+      padding: 0 10px;
+    }
   }
 }
+
+li:nth-child(even) {
+  .arrow-left,
+  .arrow-down,
+  .copy {
+    path {
+      fill: $bg-light;
+    }
+  }
+}
+
 @media only screen and (min-width: 614px) {
+  // Width:
+  .url-maker-container,
+  .link-list-holder {
+    width: 80% !important;
+  }
   header {
     h1 {
       margin-top: 200px !important;
     }
     .url-maker-container {
-      width: 80% !important;
       input {
         font-size: 0.9em !important;
       }
@@ -162,36 +210,21 @@ header {
     h2 {
       font-size: 1.5em;
     }
-    .link-list-holder {
-      width: 80% !important;
-    }
-
   }
-
 }
 
 @media only screen and (min-width: 992px) {
-  header {
-    .url-maker-container {
-      width: 60% !important;
-    }
-  }
-  main {
-    .link-list-holder {
-      width: 60% !important;
-    }
+  // Width:
+  .url-maker-container,
+  .link-list-holder {
+    width: 60% !important;
   }
 }
 
 @media only screen and (min-width: 1300px) {
-  header {
-    .url-maker-container {
-      width: 40% !important;
-    }
-  }
-  main {
-    .link-list-holder {
-      width: 40% !important;
-    }
+  // Width:
+  .url-maker-container,
+  .link-list-holder {
+    width: 40% !important;
   }
 }

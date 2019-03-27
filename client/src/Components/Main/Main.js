@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import "./Main.scss";
+import { ClipBoard, Arrow } from "../Svgs/Svgs";
 
 export default class Main extends Component {
   state = {
     url: "",
     isTrueUrl: false,
-    lastTenLinks: []
+    lastTenLinks: [],
+    error: false
   };
 
   componentDidMount() {
@@ -74,11 +76,13 @@ export default class Main extends Component {
         .then(res => res.json())
         .then(() => {
           this.getLastTenLinks();
+          this.setState({ error: false });
         })
         .catch(err => {
           console.log(err);
         });
     } else {
+      this.setState({ error: true });
       // Error here
     }
   };
@@ -100,6 +104,22 @@ export default class Main extends Component {
     return `${window.location.origin}/${tinyUrl}`;
   };
 
+  handleArrow = index => {
+    let lastTenLinks = [...this.state.lastTenLinks];
+    lastTenLinks.map((link, _index) => {
+      if (_index === index && link.showTarget) {
+        link.showTarget = false;
+      } else if (_index === index) {
+        link.showTarget = true;
+      } else {
+        link.showTarget = false;
+      }
+      return link;
+    });
+
+    this.setState({ lastTenLinks });
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -119,6 +139,9 @@ export default class Main extends Component {
               />
               <button onClick={this.submit}>Shorten link</button>
             </div>{" "}
+            {this.state.error && (
+                <p className='error'>The link provided could not be shortened.</p>
+            )}
           </div>
         </header>
 
@@ -128,16 +151,39 @@ export default class Main extends Component {
           <div className='link-list-holder'>
             <ol>
               <li>
-              <h4>Tiny Link:</h4>
+                <h4>Tiny Link:</h4>
               </li>
-              {this.state.lastTenLinks.map(link => {
+              {this.state.lastTenLinks.map((link, index) => {
                 return (
                   <li key={link.tinyUrl}>
-                    <a target='_blank' href={this.createFullLink(link.tinyUrl)}>
-                      {this.createFullLink(link.tinyUrl)}
-                    </a>
-                    {/* Should be hidden in the first instance, an arrow should be able to show the targeted link under */}
-                    {/* <a className="web-link" href={link.webUrl}>{link.webUrl}</a> */}
+                    <div
+                      className='svg-holder'
+                      onClick={() => this.handleArrow(index)}
+                    >
+                      <Arrow
+                        className={
+                          link.showTarget ? "arrow-down" : "arrow-left"
+                        }
+                      />
+                    </div>
+
+                    <div className='link-holder'>
+                      <a
+                        target='_blank'
+                        href={this.createFullLink(link.tinyUrl)}
+                      >
+                        {this.createFullLink(link.tinyUrl)}
+                      </a>
+
+
+                        <a className={link.showTarget ? 'web-link' : 'web-link collapsed'} href={link.webUrl}>
+                          {link.webUrl}
+                        </a>
+                    </div>
+
+                    <div className='svg-holder'>
+                      <ClipBoard className='copy' />
+                    </div>
                   </li>
                 );
               })}
