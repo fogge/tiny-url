@@ -110,19 +110,34 @@ export default class Main extends Component {
   };
 
   handleArrow = index => {
+    let isAllCollapsed = this.state.lastTenLinks.every(link => link.showTarget === true);
+    console.log(index);
     let lastTenLinks = [...this.state.lastTenLinks];
     lastTenLinks.map((link, _index) => {
-      console.log(link)
-      if (_index === index) {
+      if(index === 'all') {
+        link.showTarget = !isAllCollapsed;
+        return link
+      } else if (_index === index) {
         link.showTarget = !link.showTarget;
       } 
       return link;
     });
-
     this.setState({ lastTenLinks });
   };
 
   copyToClipboard = index => {
+    let lastTenLinks = [...this.state.lastTenLinks];
+    lastTenLinks.map((link, _index) => {
+      console.log(link)
+      if (_index === index) {
+        link.isCopied = true;
+      } else {
+        link.isCopied = false;
+      }
+      return link;
+    });
+    this.setState({ lastTenLinks });
+
     let url = this.state.lastTenLinks[index].tinyUrl;
     let inputField = document.querySelector('#copy-to-clipboard')
     inputField.value = this.createFullLink(url) 

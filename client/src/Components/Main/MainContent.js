@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import { ClipBoard, Arrow } from "../Svgs/Svgs";
+import Svgs from "../Svgs/Svgs";
 
 export default class MainContent extends Component {
   render() {
+    let isAllCollapsed = this.props.lastTenLinks.every(link => link.showTarget === true);
     return (
       <main>
         <h2>Your 10 last created links</h2>
@@ -10,7 +11,9 @@ export default class MainContent extends Component {
         <div className='link-list-holder'>
           <ol>
             <li>
+              <Svgs.ArrowWithLine className={isAllCollapsed ? "arrow-line open" : "arrow-line"} onClick={() => this.props.handleArrow('all')}/>
               <h4>Tiny Link:</h4>
+              <Svgs.ClearAll className="clear-all" />
             </li>
             {this.props.lastTenLinks.map((link, index) => {
               return (
@@ -19,12 +22,16 @@ export default class MainContent extends Component {
                     className='svg-holder'
                     onClick={() => this.props.handleArrow(index)}
                   >
-                    <Arrow
+                    <Svgs.Arrow
                       className={link.showTarget ? "arrow-down" : "arrow-left"}
                     />
                   </div>
                   <div className='link-holder'>
-                    <a target='_blank' className="tiny-link" href={this.props.createFullLink(link.tinyUrl)}>
+                    <a
+                      target='_blank'
+                      className='tiny-link'
+                      href={this.props.createFullLink(link.tinyUrl)}
+                    >
                       {this.props.createFullLink(link.tinyUrl)}
                     </a>
 
@@ -37,8 +44,15 @@ export default class MainContent extends Component {
                       <a href={link.webUrl}>{link.webUrl}</a>
                     </div>
                   </div>
-                  <div className='svg-holder' onClick={() => this.props.copyToClipboard(index)}>
-                    <ClipBoard className='copy' />
+                  <div
+                    className='svg-holder'
+                    onClick={() => this.props.copyToClipboard(index)}
+                  >
+                    {link.isCopied ? (
+                      <Svgs.ClipBoardCopied className='copy copy-selected' />
+                    ) : (
+                      <Svgs.ClipBoard className='copy' />
+                    )}
                   </div>
                 </li>
               );
