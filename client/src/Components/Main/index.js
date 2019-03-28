@@ -1,13 +1,17 @@
 import React, { Component } from "react";
 import "./Main.scss";
-import { ClipBoard, Arrow } from "../Svgs/Svgs";
+import "../Header/Header.scss";
+import MainContent from "./MainContent"
+import Header from "../Header/Header"
+
 
 export default class Main extends Component {
   state = {
     url: "",
     isTrueUrl: false,
     lastTenLinks: [],
-    error: false
+    error: false,
+    success: false
   };
 
   componentDidMount() {
@@ -58,7 +62,8 @@ export default class Main extends Component {
     return url;
   };
 
-  submit = () => {
+  submit = (e) => {
+    e.preventDefault();
     if (this.state.isTrueUrl) {
       let webUrl = this.addHttpToLink(this.state.url);
       let data = {
@@ -76,13 +81,13 @@ export default class Main extends Component {
         .then(res => res.json())
         .then(() => {
           this.getLastTenLinks();
-          this.setState({ error: false });
+          this.setState({ success: true, error: false, url: '' });
         })
         .catch(err => {
           console.log(err);
         });
     } else {
-      this.setState({ error: true });
+      this.setState({ success: false, error: true });
       // Error here
     }
   };
@@ -107,89 +112,46 @@ export default class Main extends Component {
   handleArrow = index => {
     let lastTenLinks = [...this.state.lastTenLinks];
     lastTenLinks.map((link, _index) => {
-      if (_index === index && link.showTarget) {
-        link.showTarget = false;
-      } else if (_index === index) {
-        link.showTarget = true;
-      } else {
-        link.showTarget = false;
-      }
+      console.log(link)
+      if (_index === index) {
+        link.showTarget = !link.showTarget;
+      } 
       return link;
     });
 
     this.setState({ lastTenLinks });
   };
 
+  copyToClipboard = index => {
+    let url = this.state.lastTenLinks[index].tinyUrl;
+    let inputField = document.querySelector('#copy-to-clipboard')
+    inputField.value = this.createFullLink(url) 
+    inputField.select();
+    document.execCommand('copy');
+  }
+
   render() {
+    let headerProps = {
+      isTrueUrl: this.state.isTrueUrl,
+      url: this.state.url,
+      onChangeHandler: this.onChangeHandler,
+      submit: this.submit,
+      error: this.state.error,
+      success: this.state.success
+    }
+
+    let mainProps = {
+      lastTenLinks: this.state.lastTenLinks,
+      handleArrow:  this.handleArrow,
+      createFullLink: this.createFullLink,
+      copyToClipboard: this.copyToClipboard
+    }
+
+
     return (
       <React.Fragment>
-        <header>
-          <div className='header-overlay'>
-            <h1>A link-shortener for everyone</h1>
-            <div className='url-maker-container'>
-              <input
-                className={
-                  this.state.isTrueUrl ? "input-success" : "input-error"
-                }
-                value={this.state.url}
-                type='url'
-                name='homepage'
-                onChange={e => this.onChangeHandler(e)}
-                placeholder="Paste a link and I'll shorten it for you"
-              />
-              <button onClick={this.submit}>Shorten link</button>
-            </div>{" "}
-            {this.state.error && (
-                <p className='error'>The link provided could not be shortened.</p>
-            )}
-          </div>
-        </header>
-
-        <main>
-          <h2>Your 10 last created links</h2>
-
-          <div className='link-list-holder'>
-            <ol>
-              <li>
-                <h4>Tiny Link:</h4>
-              </li>
-              {this.state.lastTenLinks.map((link, index) => {
-                return (
-                  <li key={link.tinyUrl}>
-                    <div
-                      className='svg-holder'
-                      onClick={() => this.handleArrow(index)}
-                    >
-                      <Arrow
-                        className={
-                          link.showTarget ? "arrow-down" : "arrow-left"
-                        }
-                      />
-                    </div>
-
-                    <div className='link-holder'>
-                      <a
-                        target='_blank'
-                        href={this.createFullLink(link.tinyUrl)}
-                      >
-                        {this.createFullLink(link.tinyUrl)}
-                      </a>
-
-
-                        <a className={link.showTarget ? 'web-link' : 'web-link collapsed'} href={link.webUrl}>
-                          {link.webUrl}
-                        </a>
-                    </div>
-
-                    <div className='svg-holder'>
-                      <ClipBoard className='copy' />
-                    </div>
-                  </li>
-                );
-              })}
-            </ol>
-          </div>
-        </main>
+        <Header {...headerProps} />
+        <MainContent {...mainProps} />        
       </React.Fragment>
     );
   }
