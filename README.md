@@ -37,5 +37,3 @@ This will build and start up the server.
 #### Others:
 * Postinstall (to call something after the npm install is complete)
 * Concurrently (run more than one script at one time)
-
-#### NN === Not needed
