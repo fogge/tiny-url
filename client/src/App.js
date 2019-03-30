@@ -6,7 +6,7 @@ import {
   Redirect
 } from "react-router-dom";
 
-import Test from "./Components/Main";
+import Main from "./Components/Main/Main";
 import "./styles/base.scss";
 
 class App extends Component {
@@ -15,7 +15,7 @@ class App extends Component {
       <Router>
         <Switch>
           <Route path='/' exact >
-            <Test />
+            <Main />
           </Route>
           <Route>
             <Redirect to='/' />

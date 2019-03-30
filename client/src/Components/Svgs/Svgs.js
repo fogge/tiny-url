@@ -42,7 +42,6 @@ const ClipBoardCopied = props => {
 };
 
 const ArrowWithLine = props => {
-  console.log(props);
   return (
     <svg
       width='24'

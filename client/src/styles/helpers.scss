@@ -1,0 +1,31 @@
+@import './colors.scss';
+
+
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+%svg-fill {
+  path {
+    fill: $bg-dark-secondary;
+  }
+  &:hover {
+    path {
+      fill: $text-hover;
+    }
+  }
+}
+
+%center-all {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

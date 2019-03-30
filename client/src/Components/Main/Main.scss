@@ -1,12 +1,11 @@
 @import "../../styles/colors.scss";
+@import "../../styles/helpers.scss";
 
 main {
+  @extend %center-all;
   margin: auto;
   margin-top: 300px;
-  display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   h2 {
     color: $bg-dark;
     text-transform: uppercase;
@@ -17,7 +16,6 @@ main {
   .link-list-holder {
     box-sizing: border-box;
     box-shadow: 0 -5px 5px -5px $bg-dark;
-    width: 100%;
     padding: 0 10px;
     ol {
       padding: 0;
@@ -25,7 +23,6 @@ main {
         background: $bg-dark-secondary;
         h4 {
           color: $bg-light;
-          border-bottom: 1px solid $bg-light !important;
         }
         a {
           color: $bg-light;
@@ -39,17 +36,17 @@ main {
         border-bottom: 1px solid $bg-dark;
         border-radius: 0;
       }
+
       li {
-        border-radius: 5px;
         display: flex;
-        padding: 5px 0;
+        border-radius: 5px;
         justify-content: space-between;
+        padding: 5px 0;
         .link-holder {
           width: 80%;
         }
         a {
-          display: flex;
-          justify-content: center;
+          @extend %center-all;
           color: $bg-dark;
           padding-top: 3px;
           &:hover {
@@ -70,12 +67,10 @@ main {
           max-height: 150px;
           word-break: break-all;
           h4 {
+            @extend %center-all;
             margin: 0;
             padding: 5px 0 0;
-            display: flex;
-            justify-content: center;
-            border-bottom: 1px solid $bg-dark-secondary;
-            padding-bottom: 2px;
+            font-size: 1.4em;
           }
         }
         .web-link.collapsed {
@@ -90,9 +85,7 @@ main {
           transform: rotate(90deg);
         }
         .svg-holder {
-          display: flex;
-          justify-content: center;
-          align-items: center;
+          @extend %center-all;
           cursor: pointer;
           .copy {
             padding-right: 3px;
@@ -108,14 +101,7 @@ main {
   .arrow-left,
   .arrow-down,
   .copy {
-    path {
-      fill: $bg-dark-secondary;
-    }
-    &:hover {
-      path {
-        fill: $text-hover;
-      }
-    }
+    @extend %svg-fill;
   }
 
   li:nth-child(even) {
@@ -136,73 +122,17 @@ main {
 
 // SVG
 .clear-all {
+  @extend %svg-fill;
   padding-left: 2px;
   transform: rotate(180deg);
-
-  path {
-    fill: $bg-dark-secondary;
-  }
-  &:hover {
-    path {
-      fill: $text-hover;
-    }
-  }
 }
 
 .arrow-line {
   padding-left: 3px;
   transition: transform 400ms ease-in-out;
-  path {
-    fill: $bg-dark-secondary;
-  }
-  &:hover {
-    path {
-      fill: $text-hover;
-    }
-  }
+  @extend %svg-fill;
+
   &.open {
-    transform: rotate(90deg)
-  }
-}
-
-@media only screen and (min-width: 614px) {
-  // Width:
-  .url-maker-container,
-  .link-list-holder {
-    width: 80% !important;
-  }
-  header {
-    h1 {
-      margin-top: 130px !important;
-    }
-    .url-maker-container {
-      input {
-        font-size: 0.9em !important;
-      }
-      button {
-        width: 130px !important;
-      }
-    }
-  }
-  main {
-    h2 {
-      font-size: 1.5em;
-    }
-  }
-}
-
-@media only screen and (min-width: 992px) {
-  // Width:
-  .url-maker-container,
-  .link-list-holder {
-    width: 60% !important;
-  }
-}
-
-@media only screen and (min-width: 1300px) {
-  // Width:
-  .url-maker-container,
-  .link-list-holder {
-    width: 40% !important;
+    transform: rotate(90deg);
   }
 }

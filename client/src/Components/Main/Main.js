@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import "./Main.scss";
 import "../Header/Header.scss";
-import MainContent from "./MainContent"
-import Header from "../Header/Header"
-
+import List from "../List/List";
+import Header from "../Header/Header";
 
 export default class Main extends Component {
   state = {
@@ -11,7 +10,7 @@ export default class Main extends Component {
     isTrueUrl: false,
     lastTenLinks: [],
     error: false,
-    success: false
+    success: false,
   };
 
   componentDidMount() {
@@ -25,6 +24,19 @@ export default class Main extends Component {
     } else {
       this.setState({ url, isTrueUrl: false });
     }
+  };
+
+  validateUrl = str => {
+    let pattern = new RegExp(
+      "^(https?:\\/\\/)?" + // protocol
+      "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+      "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+      "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+      "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+        "(\\#[-a-z\\d_]*)?$",
+      "i"
+    ); // fragment locator
+    return !!pattern.test(str);
   };
 
   randomizeString = () => {
@@ -62,7 +74,7 @@ export default class Main extends Component {
     return url;
   };
 
-  submit = (e) => {
+  submit = e => {
     e.preventDefault();
     if (this.state.isTrueUrl) {
       let webUrl = this.addHttpToLink(this.state.url);
@@ -81,7 +93,7 @@ export default class Main extends Component {
         .then(res => res.json())
         .then(() => {
           this.getLastTenLinks();
-          this.setState({ success: true, error: false, url: '' });
+          this.setState({ success: true, error: false, url: "" });
         })
         .catch(err => {
           console.log(err);
@@ -92,34 +104,25 @@ export default class Main extends Component {
     }
   };
 
-  validateUrl = str => {
-    let pattern = new RegExp(
-      "^(https?:\\/\\/)?" + // protocol
-      "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-      "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-      "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-      "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-        "(\\#[-a-z\\d_]*)?$",
-      "i"
-    ); // fragment locator
-    return !!pattern.test(str);
-  };
+
 
   createFullLink = tinyUrl => {
     return `${window.location.origin}/${tinyUrl}`;
   };
 
   handleArrow = index => {
-    let isAllCollapsed = this.state.lastTenLinks.every(link => link.showTarget === true);
+    let isAllCollapsed = this.state.lastTenLinks.every(
+      link => link.showTarget === true
+    );
     console.log(index);
     let lastTenLinks = [...this.state.lastTenLinks];
     lastTenLinks.map((link, _index) => {
-      if(index === 'all') {
+      if (index === "all") {
         link.showTarget = !isAllCollapsed;
-        return link
+        return link;
       } else if (_index === index) {
         link.showTarget = !link.showTarget;
-      } 
+      }
       return link;
     });
     this.setState({ lastTenLinks });
@@ -128,7 +131,7 @@ export default class Main extends Component {
   copyToClipboard = index => {
     let lastTenLinks = [...this.state.lastTenLinks];
     lastTenLinks.map((link, _index) => {
-      console.log(link)
+      console.log(link);
       if (_index === index) {
         link.isCopied = true;
       } else {
@@ -139,10 +142,14 @@ export default class Main extends Component {
     this.setState({ lastTenLinks });
 
     let url = this.state.lastTenLinks[index].tinyUrl;
-    let inputField = document.querySelector('#copy-to-clipboard')
-    inputField.value = this.createFullLink(url) 
+    let inputField = document.querySelector("#copy-to-clipboard");
+    inputField.value = this.createFullLink(url);
     inputField.select();
-    document.execCommand('copy');
+    document.execCommand("copy");
+  };
+
+  deleteAll = () => {
+    console.log('deleting all..')
   }
 
   render() {
@@ -153,20 +160,20 @@ export default class Main extends Component {
       submit: this.submit,
       error: this.state.error,
       success: this.state.success
-    }
+    };
 
     let mainProps = {
       lastTenLinks: this.state.lastTenLinks,
-      handleArrow:  this.handleArrow,
+      handleArrow: this.handleArrow,
       createFullLink: this.createFullLink,
-      copyToClipboard: this.copyToClipboard
-    }
-
+      copyToClipboard: this.copyToClipboard,
+      deleteAll: this.deleteAll,
+    };
 
     return (
       <React.Fragment>
         <Header {...headerProps} />
-        <MainContent {...mainProps} />        
+        <List {...mainProps} />
       </React.Fragment>
     );
   }
