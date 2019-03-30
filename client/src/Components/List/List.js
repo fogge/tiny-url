@@ -20,9 +20,11 @@ export default class List extends Component {
     return (
       <React.Fragment>
         {this.state.showModal ? (
-          <Modal toggleModal={this.toggleModal} deleteAll={this.props.deleteAll}>
-
-          </Modal>
+          <Modal
+            toggleModal={this.toggleModal}
+            deleteAll={this.props.deleteAll}
+            deletionMessage={this.props.deletionMessage}
+          />
         ) : null}
 
         <main>
@@ -36,7 +38,10 @@ export default class List extends Component {
                   onClick={() => this.props.handleArrow("all")}
                 />
                 <h4>Tiny Link:</h4>
-                <Svgs.ClearAll className="clear-all" onClick={this.toggleModal} />
+                <Svgs.ClearAll
+                  className="clear-all"
+                  onClick={this.toggleModal}
+                />
               </li>
               {this.props.lastTenLinks.map((link, index) => {
                 return (
@@ -62,5 +67,6 @@ List.propTypes = {
   lastTenLinks: PropTypes.array,
   handleArrow: PropTypes.func,
   createFullLink: PropTypes.func,
-  copyToClipboard: PropTypes.func
+  copyToClipboard: PropTypes.func,
+  deletionMessage: PropTypes.string
 };

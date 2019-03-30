@@ -12,7 +12,7 @@ router.post("/createLink", (req, res) => {
     date: new Date()
   })
     .save()
-    .then(link => {
+    .then(() => {
       res.json({ success: true, message: "User created" });
     });
 });
@@ -24,6 +24,15 @@ router.get("/getLinks", (req, res) => {
     .catch(err => console.log(err))
     .then(links => {
       res.json(links);
+    });
+});
+
+router.get("/deleteLinks", (req, res) => {
+  console.log('trying to delelete...')
+  Link.deleteMany({session: req.session.id})
+    .catch(err => console.log(err))
+    .then(() => {
+      res.json({message: 'Everything was successfully deleted.'})
     });
 });
 

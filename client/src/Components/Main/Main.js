@@ -11,6 +11,7 @@ export default class Main extends Component {
     lastTenLinks: [],
     error: false,
     success: false,
+    deletionMessage: ""
   };
 
   componentDidMount() {
@@ -74,6 +75,25 @@ export default class Main extends Component {
     return url;
   };
 
+  deleteAll = () => {
+    fetch("api/deleteLinks", {
+      method: "GET",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        console.log(res.message);
+        this.getLastTenLinks();
+        this.setState({ deletionMessage: res.message });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
   submit = e => {
     e.preventDefault();
     if (this.state.isTrueUrl) {
@@ -94,17 +114,27 @@ export default class Main extends Component {
         .then(() => {
           this.getLastTenLinks();
           this.setState({ success: true, error: false, url: "" });
+
+          // Clearing message
+          setTimeout(() => {
+            if (this.state.success) {
+              this.setState({ success: false });
+            }
+          }, 5000);
         })
         .catch(err => {
           console.log(err);
         });
     } else {
       this.setState({ success: false, error: true });
-      // Error here
+      // Clearing message
+      setTimeout(() => {
+        if (this.state.false) {
+          this.setState({ false: false });
+        }
+      }, 5000);
     }
   };
-
-
 
   createFullLink = tinyUrl => {
     return `${window.location.origin}/${tinyUrl}`;
@@ -148,10 +178,6 @@ export default class Main extends Component {
     document.execCommand("copy");
   };
 
-  deleteAll = () => {
-    console.log('deleting all..')
-  }
-
   render() {
     let headerProps = {
       isTrueUrl: this.state.isTrueUrl,
@@ -168,6 +194,7 @@ export default class Main extends Component {
       createFullLink: this.createFullLink,
       copyToClipboard: this.copyToClipboard,
       deleteAll: this.deleteAll,
+      deletionMessage: this.state.deletionMessage
     };
 
     return (

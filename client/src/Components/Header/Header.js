@@ -23,7 +23,7 @@ export default class Header extends Component {
           )}
           {this.props.success && (
             <p className="success">
-              Link shortened! Check highest in the list.
+              Link shortened! Check first item in the list.
             </p>
           )}
         </div>

@@ -19,6 +19,10 @@ main {
     padding: 0 10px;
     ol {
       padding: 0;
+      li:nth-child(2) {
+        animation: pop-list 400ms ease-in 1;
+      }
+
       li:nth-child(even) {
         background: $bg-dark-secondary;
         h4 {
@@ -68,9 +72,9 @@ main {
           word-break: break-all;
           h4 {
             @extend %center-all;
-            margin: 0;
+            margin: -10px 0;
             padding: 5px 0 0;
-            font-size: 1.4em;
+            font-size: 1.8em;
           }
         }
         .web-link.collapsed {
