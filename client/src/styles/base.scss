@@ -1,0 +1,20 @@
+@import './colors.scss';
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+
+html {
+  font-family: 'Montserrat', sans-serif;
+  background: #f9f9f9;
+  color: #333;
+  font-weight: 300;
+  line-height: 1.16667;
+  min-height: 100%;
+}
+
+a {
+  color: initial;
+  text-decoration: none;
+  &:hover {
+    color: $bg-dark;
+  }
+}

@@ -1,18 +1,22 @@
-const mongoose = require("mongoose");
 const express = require("express");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
 const cors = require("cors");
 
-// Models
-const User = require("./models/user");
+// Session and DB
+const mongoose = require("mongoose");
+const session = require("express-session");
+const MongoStore = require("connect-mongo")(session);
+const cookieParser = require("cookie-parser");
 
+// Routes
+const api = require("./routes/api");
+
+// App config
 const API_PORT = 4000;
+const DATABASE_NAME = "tiny-url";
+const dbRoute = `mongodb://localhost:27017/${DATABASE_NAME}`;
 const app = express();
-const router = express.Router();
-
-// this is our MongoDB database
-const dbRoute = "mongodb://localhost:27017/MERN-setup";
 
 // connects our back end code with the database
 mongoose.connect(dbRoute, { useNewUrlParser: true });
@@ -24,37 +28,42 @@ db.once("open", () => console.log("connected to the database"));
 // checks if connection with the database is successful
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
+app.use(cookieParser());
+app.use(
+  session({
+    secret: "alittle1337",
+    resave: false,
+    saveUninitialized: true,
+    store: new MongoStore({ mongooseConnection: db }),
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7 * 2
+    }
+  })
+);
+
 // (optional) only made for logging and
 // bodyParser, parses the request body to be a readable json format
-app.use(cors())
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(logger("dev"));
 
-router.get("/hello", (req, res) => {
-  res.json({ message: "User created" });
-});
+app.use("/api", api.router);
 
-router.get("/getUser", (req, res) => {
-  User.find((err, data) => {
-    if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true, data: data });
-  });
-});
+app.use("/", express.static("../client/build"));
 
-router.post("/createUser", (req, res) => {
-  console.log(req);
-  const { email } = req.body;
-
-  new User({
-    email
-  })
-    .save()
-    .then(user => {
-      res.json({ success: true, message: "User created" });
+app.get("/*", (req, res) => {
+  let tinyUrl = req.url.substring(1);
+  api
+    .findAndRedirect(tinyUrl)
+    .catch(err => console.log(err))
+    .then(link => {
+      if (link === null) {
+        res.redirect(`/#/${tinyUrl}`);
+      } else {
+        res.redirect(link.webUrl);
+      }
     });
 });
-
-app.use("/api", router);
 
 app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));

@@ -1,48 +1,27 @@
 import React, { Component } from "react";
-import axios from "axios";
+import {
+  HashRouter as Router,
+  Route,
+  Switch,
+  Redirect
+} from "react-router-dom";
+
+import Main from "./Components/Main/Main";
+import "./styles/base.scss";
 
 class App extends Component {
-  state = {
-    user: false
-  };
-
-  componentDidMount() {
-
-  }
-
-  createUser = () => {
-    axios
-      .post("api/createUser", {
-        email: "hello@test.com"
-      })
-      .then(res => {
-        console.log(res);
-        this.getUser();
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
-
-  getUser = () => {
-      fetch("api/getUser")
-      .then(res => res.json())
-      .then(res => this.setState({ user: res.data[0].email}))
-      .catch(err => {
-        console.log(err);
-        this.createUser();
-      });
-  };
-
   render() {
-    if(!this.state.user) {
-      this.getUser();
-    }
     return (
-      <div className='App'>
-        <h1>MERN-Setup complete</h1>
-        <p>This user was fetched: {this.state.user ? this.state.user : "No user found"}</p>
-      </div>
+      <Router>
+        <Switch>
+          <Route path='/' exact >
+            <Main />
+          </Route>
+          <Route>
+            <Redirect to='/' />
+          </Route>
+        </Switch>
+      </Router>
     );
   }
 }
