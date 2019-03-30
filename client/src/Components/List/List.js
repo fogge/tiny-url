@@ -11,6 +11,7 @@ export default class List extends Component {
 
   toggleModal = () => {
     this.setState({ showModal: !this.state.showModal });
+    this.props.clearDeletionMessage();
   };
 
   render() {

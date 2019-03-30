@@ -8,7 +8,7 @@ html {
   font-weight: 300;
   line-height: 1.16667;
   min-height: 100%;
-  
+
   button {
     word-wrap: break-word;
     padding: 10px;
@@ -79,9 +79,11 @@ svg {
 
 @media only screen and (min-width: 1300px) {
   // Width:
-  .url-maker-container,
+  .url-maker-container {
+    width: 40% !important;
+  }
   .link-list-holder,
   .modal {
-    width: 40% !important;
+    width: 50% !important;
   }
 }

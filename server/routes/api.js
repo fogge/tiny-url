@@ -28,7 +28,6 @@ router.get("/getLinks", (req, res) => {
 });
 
 router.get("/deleteLinks", (req, res) => {
-  console.log('trying to delelete...')
   Link.deleteMany({session: req.session.id})
     .catch(err => console.log(err))
     .then(() => {

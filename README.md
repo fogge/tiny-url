@@ -20,7 +20,8 @@ Then run npm start
 ```
 $ npm start
 ```
-This will build and start up the server.
+This will build and start up the server on:
+#### http://localhost:4000/
 
 ### What's in it?
 #### Server:

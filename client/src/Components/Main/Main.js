@@ -21,9 +21,9 @@ export default class Main extends Component {
   onChangeHandler = e => {
     let url = e.currentTarget.value;
     if (this.validateUrl(url)) {
-      this.setState({ url, isTrueUrl: true });
+      this.setState({ error: false, success: false, url, isTrueUrl: true });
     } else {
-      this.setState({ url, isTrueUrl: false });
+      this.setState({ error: false, success: false, url, isTrueUrl: false });
     }
   };
 
@@ -85,7 +85,6 @@ export default class Main extends Component {
     })
       .then(res => res.json())
       .then(res => {
-        console.log(res.message);
         this.getLastTenLinks();
         this.setState({ deletionMessage: res.message });
       })
@@ -96,7 +95,7 @@ export default class Main extends Component {
 
   submit = e => {
     e.preventDefault();
-    if (this.state.isTrueUrl) {
+    if (this.state.isTrueUrl && this.state.url) {
       let webUrl = this.addHttpToLink(this.state.url);
       let data = {
         webUrl,
@@ -114,25 +113,12 @@ export default class Main extends Component {
         .then(() => {
           this.getLastTenLinks();
           this.setState({ success: true, error: false, url: "" });
-
-          // Clearing message
-          setTimeout(() => {
-            if (this.state.success) {
-              this.setState({ success: false });
-            }
-          }, 5000);
         })
         .catch(err => {
           console.log(err);
         });
     } else {
       this.setState({ success: false, error: true });
-      // Clearing message
-      setTimeout(() => {
-        if (this.state.false) {
-          this.setState({ false: false });
-        }
-      }, 5000);
     }
   };
 
@@ -140,11 +126,12 @@ export default class Main extends Component {
     return `${window.location.origin}/${tinyUrl}`;
   };
 
+  clearDeletionMessage = () => this.setState({ deletionMessage: "" });
+
   handleArrow = index => {
     let isAllCollapsed = this.state.lastTenLinks.every(
       link => link.showTarget === true
     );
-    console.log(index);
     let lastTenLinks = [...this.state.lastTenLinks];
     lastTenLinks.map((link, _index) => {
       if (index === "all") {
@@ -161,7 +148,6 @@ export default class Main extends Component {
   copyToClipboard = index => {
     let lastTenLinks = [...this.state.lastTenLinks];
     lastTenLinks.map((link, _index) => {
-      console.log(link);
       if (_index === index) {
         link.isCopied = true;
       } else {
@@ -194,7 +180,8 @@ export default class Main extends Component {
       createFullLink: this.createFullLink,
       copyToClipboard: this.copyToClipboard,
       deleteAll: this.deleteAll,
-      deletionMessage: this.state.deletionMessage
+      deletionMessage: this.state.deletionMessage,
+      clearDeletionMessage: this.clearDeletionMessage
     };
 
     return (
