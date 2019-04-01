@@ -7,7 +7,8 @@ const linkSchema = new Schema({
   },
   tinyUrl: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   session: {
     type: String,

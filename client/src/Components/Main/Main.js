@@ -110,9 +110,15 @@ export default class Main extends Component {
         body: JSON.stringify(data)
       })
         .then(res => res.json())
-        .then(() => {
-          this.getLastTenLinks();
-          this.setState({ success: true, error: false, url: "" });
+        .then(res => {
+          console.log(res);
+          if(res.success) {
+            this.getLastTenLinks();
+            this.setState({ success: true, error: false, url: "" });
+          } else {
+            this.setState({ success: false, error: true, url: "" });
+          }
+
         })
         .catch(err => {
           console.log(err);
